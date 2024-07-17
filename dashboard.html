@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Productivity Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .widget {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 9999px;
+            overflow: hidden;
+            height: 10px; /* Adjust height as needed */
+        }
+        .progress {
+            height: 100%; /* Fill the entire progress bar */
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: width 0.5s ease-in-out;
+        }
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #f00; /* Red for logout */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout-button:hover {
+            background-color: #c00; /* Darker red on hover */
+        }
+        .timer-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .timer-controls button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50; /* Green for start */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .timer-controls button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+        .timer-controls .stop-button {
+            background-color: #f44336; /* Red for stop */
+        }
+        .timer-controls .stop-button:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="gradient-bg text-white py-6 px-4 shadow-lg">
+        <h1 class="text-3xl font-bold text-center mb-2">Productivity Dashboard</h1>
+        <div id="motivationalQuote" class="text-center italic"></div>
+        <button class="logout-button" onclick="logout()">Logout</button> 
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="far fa-clock mr-2"></i>Clock</h2>
+                <div id="clock" class="text-4xl font-bold text-center mb-2"></div>
+                <div id="date" class="text-center text-gray-600"></div>
+            </div>
+
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-chart-line mr-2"></i>Productivity Score</h2>
+                <div class="text-center">
+                    <div id="productivityScore" class="text-5xl font-bold mb-2">0%</div>
+                    <div class="progress-bar">
+                        <div id="productivityProgress" class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="far fa-bell mr-2"></i>Reminders</h2>
+                <ul id="reminderList" class="mb-4"></ul>
+                <input type="text" id="newReminder" placeholder="New reminder" class="w-full p-2 mb-2 border rounded">
+                <input type="datetime-local" id="reminderTime" class="w-full p-2 mb-2 border rounded">
+                <button onclick="addReminder()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Add Reminder</button>
+            </div>
+
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-tasks mr-2"></i>Tasks</h2>
+                <ul id="taskList" class="mb-4"></ul>
+                <input type="text" id="newTask" placeholder="New task" class="w-full p-2 mb-2 border rounded">
+                <button onclick="addTask()" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Add Task</button>
+            </div>
+
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-tint mr-2"></i>Water Intake Tracker</h2>
+                <div id="waterIntake" class="text-3xl font-bold text-center mb-2">0 / 8 glasses</div>
+                <div class="progress-bar mb-4">
+                    <div id="waterProgress" class="progress" style="width: 0%"></div>
+                </div>
+                <button onclick="addWater()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Add Glass</button>
+            </div>
+
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-hourglass-half mr-2"></i>Focus Timer</h2>
+                <div class="timer-controls">
+                    <button onclick="startFocusTimer()" class="start-button">Start</button>
+                    <button onclick="stopFocusTimer()" class="stop-button">Stop</button>
+                </div>
+                <div id="focusTimer" class="text-4xl font-bold text-center mb-4">25:00</div>
+                <div class="flex justify-center">
+                    <input type="number" id="timerMinutes" value="25" min="1" class="w-16 border rounded px-2 py-1">
+                    <button onclick="updateTimer()" class="bg-purple-500 text-white p-2 rounded hover:bg-purple-600">Set Timer</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4"><i class="far fa-sticky-note mr-2"></i>Quick Notes</h2>
+            <textarea id="quickNotes" rows="5" placeholder="Jot down your thoughts..." class="w-full p-2 mb-2 border rounded"></textarea>
+            <button onclick="saveNotes()" class="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">Save Notes</button>
+        </div>
+    </div>
+
+    <script>
+        // Clock and Date
+        function updateClockAndDate() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString();
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        setInterval(updateClockAndDate, 1000);
+
+        // Motivational Quotes
+        const quotes = [
+            "The secret of getting ahead is getting started. - Mark Twain",
+            "It always seems impossible until it's done. - Nelson Mandela",
+            "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
+            "The future depends on what you do today. - Mahatma Gandhi",
+            "Believe you can and you're halfway there. - Theodore Roosevelt"
+        ];
+        function setRandomQuote() {
+            const quoteElement = document.getElementById('motivationalQuote');
+            quoteElement.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+        setRandomQuote();
+        setInterval(setRandomQuote, 3600000); // Update every 6 hours
+
+        // Reminders
+        function addReminder() {
+            const reminderInput = document.getElementById('newReminder');
+            const reminderTimeInput = document.getElementById('reminderTime');
+            const reminderList = document.getElementById('reminderList');
+
+            if (reminderInput.value.trim() !== '' && reminderTimeInput.value.trim() !== '') {
+                const reminderText = `${reminderInput.value} - ${new Date(reminderTimeInput.value).toLocaleString()}`;
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="flex items-center justify-between py-2">
+                        <div>
+                            <input type="checkbox" onchange="updateProductivityScore()" class="mr-2">
+                            <span>${reminderText}</span>
+                        </div>
+                        <button onclick="this.closest('li').remove(); updateProductivityScore()" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i> 
+                        </button>
+                    </div>
+                `;
+                reminderList.appendChild(li);
+                reminderInput.value = '';
+                reminderTimeInput.value = '';
+                updateProductivityScore();
+            }
+        }
+
+        // Tasks
+        function addTask() {
+            const taskInput = document.getElementById('newTask');
+            const taskList = document.getElementById('taskList');
+
+            if (taskInput.value.trim() !== '') {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="flex items-center justify-between py-2">
+                        <div>
+                            <input type="checkbox" onchange="updateProductivityScore()" class="mr-2">
+                            <span>${taskInput.value}</span>
+                        </div>
+                        <button onclick="this.closest('li').remove(); updateProductivityScore()" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i> 
+                        </button>
+                    </div>
+                `;
+                taskList.appendChild(li);
+                taskInput.value = '';
+                updateProductivityScore();
+            }
+        }
+
+
+        // Water Intake Tracker
+        let waterIntake = 0;
+        function addWater() {
+            if (waterIntake < 8) {
+                waterIntake++;
+                updateWaterIntake();
+                updateProductivityScore();
+            }
+        }
+        function updateWaterIntake() {
+            document.getElementById('waterIntake').textContent = `${waterIntake} / 8 glasses`;
+            document.getElementById('waterProgress').style.width = `${(waterIntake / 8) * 100}%`;
+        }
+
+        // Focus Timer
+        let focusTimer;
+        let focusTimeRemaining = 1500; // 25 minutes in seconds
+        function startFocusTimer() {
+            clearInterval(focusTimer);
+            focusTimer = setInterval(() => {
+                if (focusTimeRemaining > 0) {
+                    focusTimeRemaining--;
+                    updateFocusTimer();
+                } else {
+                    clearInterval(focusTimer);
+                    alert('Focus session completed!');
+                    updateProductivityScore();
+                }
+            }, 1000);
+        }
+        function stopFocusTimer() {
+            clearInterval(focusTimer);
+        }
+        function updateFocusTimer() {
+            const minutes = Math.floor(focusTimeRemaining / 60);
+            const seconds = focusTimeRemaining % 60;
+            document.getElementById('focusTimer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Quick Notes
+        function saveNotes() {
+            const quickNotes = document.getElementById('quickNotes').value;
+            localStorage.setItem('quickNotes', quickNotes);
+            alert('Notes saved!');
+        }
+
+        // Logout
+        function logout() {
+            // Handle logout logic here (e.g., clear session, redirect to login page)
+            window.location.href = "index.html"; // Example: Redirect to login page
+        }
+
+        // Productivity Score
+        function updateProductivityScore() {
+            const tasks = document.querySelectorAll('#taskList input[type="checkbox"]');
+            const reminders = document.querySelectorAll('#reminderList input[type="checkbox"]');
+            const totalItems = tasks.length + reminders.length;
+            const completedItems = [...tasks, ...reminders].filter(item => item.checked).length;
+            const productivityScore = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+            document.getElementById('productivityScore').textContent = `${productivityScore}%`;
+            document.getElementById('productivityProgress').style.width = `${productivityScore}%`;
+        }
+
+        // Initialize
+        window.onload = function() {
+            updateClockAndDate();
+            updateProductivityScore();
+            const savedNotes = localStorage.getItem('quickNotes');
+            if (savedNotes) {
+                document.getElementById('quickNotes').value = savedNotes;
+            }
+        };
+
+        // Timer updates
+        function updateTimer() {
+            const timerMinutes = document.getElementById('timerMinutes').value;
+            focusTimeRemaining = timerMinutes * 60; // Convert minutes to seconds
+            updateFocusTimer();
+        }
+
+        // Event listener for Enter key press (dashboard.html)
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const activeElementId = document.activeElement.id;
+
+                switch (activeElementId) {
+                    case 'newReminder':
+                        addReminder();
+                        break;
+                    case 'newTask':
+                        addTask();
+                        break;
+                    case 'quickNotes':
+                        saveNotes();
+                        break;
+                    case 'timerMinutes': 
+                        updateTimer();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
