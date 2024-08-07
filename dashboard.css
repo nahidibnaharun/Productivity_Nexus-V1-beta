@@ -1,0 +1,63 @@
+.gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.widget {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+.widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+.progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 9999px;
+    overflow: hidden;
+    height: 10px; /* Adjust height as needed */
+}
+.progress {
+    height: 100%; /* Fill the entire progress bar */
+    background: linear-gradient(to right, #667eea, #764ba2);
+    transition: width 0.5s ease-in-out;
+}
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #f00; /* Red for logout */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.logout-button:hover {
+    background-color: #c00; /* Darker red on hover */
+}
+.timer-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.timer-controls button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Green for start */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.timer-controls button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+.timer-controls .stop-button {
+    background-color: #f44336; /* Red for stop */
+}
+.timer-controls .stop-button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
