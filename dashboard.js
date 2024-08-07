@@ -1,5 +1,3 @@
-
-
 // Clock and Date
 function updateClockAndDate() {
     const now = new Date();
@@ -79,7 +77,6 @@ function addTask() {
     }
 }
 
-
 // Water Intake Tracker
 let waterIntake = 0;
 function addWater() {
@@ -151,6 +148,18 @@ window.onload = function() {
     if (savedNotes) {
         document.getElementById('quickNotes').value = savedNotes;
     }
+
+    // Add event listeners for Enter key press in input fields AFTER the page loads
+    document.getElementById('newTask').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            addTask();
+        }
+    });
+    document.getElementById('newReminder').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            addReminder();
+        }
+    });
 }
 
 // Timer updates
