@@ -33,7 +33,8 @@
 
 | Dashboard |
 |-----------|
-| ![Dashboard Preview](https://github.com/user-attachments/assets/5cbedac1-520b-4739-9980-bf620862f37f) |
+| ![Dashboard Preview](![image](https://github.com/user-attachments/assets/03657e20-f50a-4867-bb9e-26ff31873833)
+) |
 
 ---
 
@@ -47,15 +48,18 @@
 ## 📁 File Structure
 
 ├── index.html # Home/Login Page
+
 ├── dashboard.html # Main dashboard
+
 ├── index.css # Styles for login
+
 ├── dashboard.css # Styles for dashboard
+
 ├── index.js # Logic for login
+
 ├── dashboard.js # Task & productivity logic
 
-less
-Copy
-Edit
+
 
 ---
 
