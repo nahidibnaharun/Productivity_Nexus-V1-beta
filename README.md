@@ -33,7 +33,7 @@
 
 | Dashboard |
 |-----------|
-|(![image](https://github.com/user-attachments/assets/03657e20-f50a-4867-bb9e-26ff31873833)
+|![image](https://github.com/user-attachments/assets/03657e20-f50a-4867-bb9e-26ff31873833)
 
 
 ---
